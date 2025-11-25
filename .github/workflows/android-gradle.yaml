@@ -32,7 +32,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
 
       - name: Enable Corepack
         run: corepack enable
@@ -41,9 +40,25 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 9.14.2
+          run_install: false
+
+      - name: Verify pnpm
+        run: pnpm --version
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-store-${{ runner.os }}-
 
       - name: Install Dependencies (Monorepo Root)
         run: pnpm install --frozen-lockfile
+
+      - name: Verify expo CLI (should be installed as dependency)
+        working-directory: apps/easypid
+        run: npx expo --version
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -60,7 +75,6 @@ jobs:
         run: |
           echo "Selected variant: ${{ github.event.inputs.variant }}"
           echo "Selected app type: ${{ github.event.inputs.app_type }}"
-          # Export environment variables for subsequent steps
           echo "APP_VARIANT=${{ github.event.inputs.variant }}" >> $GITHUB_ENV
           echo "EXPO_PUBLIC_APP_TYPE=${{ github.event.inputs.app_type }}" >> $GITHUB_ENV
 
@@ -69,10 +83,9 @@ jobs:
         env:
           APP_VARIANT: ${{ env.APP_VARIANT }}
           EXPO_PUBLIC_APP_TYPE: ${{ env.EXPO_PUBLIC_APP_TYPE }}
+          EXPO_NO_TELEMETRY: 1
         run: |
-          # If you want to skip iOS generation explicitly:
           npx expo prebuild --platform android --no-install
-          # Optionally tweak gradle.properties for memory:
           echo "org.gradle.jvmargs=-Xmx2g -Dkotlin.daemon.jvm.options=-Xmx1g" >> android/gradle.properties
 
       - name: Ensure Android Build Tools (Optional)
