@@ -40,6 +40,7 @@ import { Linking, Platform } from 'react-native'
 import { useHasFinishedOnboarding } from './hasFinishedOnboarding'
 import { onboardingSteps } from './steps'
 import { useShouldUseCloudHsm } from './useShouldUseCloudHsm'
+import { isDevice } from 'expo-device'
 
 export type OnboardingContext = {
   currentStep: OnboardingStep['step']
@@ -233,7 +234,7 @@ export function OnboardingContextProvider({
 
     try {
       if (secureUnlock.state === 'acquired-wallet-key') {
-        await secureUnlock.setWalletKeyValid({ agent }, { enableBiometrics: true })
+        await secureUnlock.setWalletKeyValid({ agent }, { enableBiometrics: isDevice })
       }
 
       // Directly try getting the wallet key so the user can enable biometrics
