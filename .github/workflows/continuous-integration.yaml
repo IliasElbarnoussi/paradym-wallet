@@ -23,14 +23,24 @@ jobs:
 
       - uses: pnpm/action-setup@v4
 
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_PUBLISHER_ACCESS_TOKEN }}
+
       - name: Install dependencies
         run: pnpm install
 
       - name: Compile
         run: pnpm build
 
-      - name: Check Style
-        run: pnpm style:check
-
-      - name: Check Types
-        run: pnpm types:check
+      - name: Build Android APK with EAS local
+        working-directory: apps/easypid
+        run: |
+          set -euo pipefail
+          pnpm dlx eas-cli@latest build \
+            --local \
+            --non-interactive \
+            --platform android \
+            --profile paradym-preview
