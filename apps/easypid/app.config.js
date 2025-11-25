@@ -32,7 +32,7 @@ const APP_CONFIGS = {
     adaptiveIcon: './assets/paradym/adaptive_icon.png',
     splash: './assets/paradym/splash.png',
     splashIcon: './assets/paradym/splash_icon.png',
-    slug: 'paradym-wallet',
+    slug: 'paradym-testing',
     version,
     bundleId: 'id.paradym.wallet',
     additionalInvitationSchemes: ['didcomm'],
