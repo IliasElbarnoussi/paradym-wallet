@@ -39,6 +39,7 @@ jobs:
         working-directory: apps/easypid
         run: |
           set -euo pipefail
+          
           pnpm dlx eas-cli@latest build \
             --local \
             --non-interactive \
