@@ -37,7 +37,7 @@ const APP_CONFIGS = {
     bundleId: 'id.paradym.wallet',
     additionalInvitationSchemes: ['didcomm'],
     associatedDomains: ['paradym.id', 'dev.paradym.id'],
-    projectId: 'b5f457fa-bcab-4c6e-8092-8cdf1239027a',
+    // projectId: 'b5f457fa-bcab-4c6e-8092-8cdf1239027a',
     assets: ['./assets/paradym/icon.png'],
     extraConfig: {
       mediatorDid: mediatorDids[process.env.APP_VARIANT || 'production'],
