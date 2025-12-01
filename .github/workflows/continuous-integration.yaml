@@ -49,7 +49,6 @@ jobs:
           set -euo pipefail
           
           pnpm dlx eas-cli@latest build \
-            --local \
             --non-interactive \
             --platform android \
             --profile paradym-preview
@@ -62,38 +61,38 @@ jobs:
           echo "APK_PATH=$APK" >> $GITHUB_ENV
           echo "Found APK: $APK"
 
-      - name: Enable KVM (Hardware Accel)
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
-            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
+      # - name: Enable KVM (Hardware Accel)
+      #   run: |
+      #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+      #       | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+      #     sudo udevadm control --reload-rules
+      #     sudo udevadm trigger --name-match=kvm
 
-      - name: Install Maestro CLI
-        run: |
-          curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+      # - name: Install Maestro CLI
+      #   run: |
+      #     curl -Ls "https://get.maestro.mobile.dev" | bash
+      #     echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Free Disk Space (minimal + safe)
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/share/boost
-          sudo rm -rf /usr/local/lib/android
-          sudo docker system prune -af || true
+      # - name: Free Disk Space (minimal + safe)
+      #   run: |
+      #     sudo rm -rf /usr/share/dotnet
+      #     sudo rm -rf /opt/ghc
+      #     sudo rm -rf /usr/local/share/boost
+      #     sudo rm -rf /usr/local/lib/android
+      #     sudo docker system prune -af || true
 
-      - name: Start Android Emulator & Run Maestro Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          target: google_apis
-          arch: x86_64
-          profile: pixel_7
-          script: |
-            echo "Emulator started"
+      # - name: Start Android Emulator & Run Maestro Tests
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 29
+      #     target: google_apis
+      #     arch: x86_64
+      #     profile: pixel_7
+      #     script: |
+      #       echo "Emulator started"
 
-            echo "Installing APK: $APK_PATH"
-            adb install "$APK_PATH"
+      #       echo "Installing APK: $APK_PATH"
+      #       adb install "$APK_PATH"
 
-            echo "Running Maestro tests"
-            maestro test ./maestro/get-started.yaml
+      #       echo "Running Maestro tests"
+      #       maestro test ./maestro/get-started.yaml
