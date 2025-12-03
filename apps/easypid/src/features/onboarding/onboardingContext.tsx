@@ -41,7 +41,6 @@ import { Linking, Platform } from 'react-native'
 import { useHasFinishedOnboarding } from './hasFinishedOnboarding'
 import { onboardingSteps } from './steps'
 import { useShouldUseCloudHsm } from './useShouldUseCloudHsm'
-import { isDevice } from 'expo-device'
 
 export type OnboardingContext = {
   currentStep: OnboardingStep['step']
